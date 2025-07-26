@@ -6,7 +6,7 @@ import random
 
 # Set up page
 st.set_page_config(page_title="Interactive Biomedical Knowledge Graph", layout="wide")
-st.title("🧠 Interactive Drug–Disease–Biomarker Knowledge Graph")
+st.title("Drug–Disease–Biomarker Knowledge Graph")
 st.markdown("Explore how **knowledge graphs** connect real-world medical concepts through drugs, diseases, and biomarkers.")
 
 # Generate synthetic 100-row dataset
@@ -40,7 +40,7 @@ for row in df.itertuples(index=False):
     G.add_edge(row.Disease, row.Biomarker, relation='indicated_by')
 
 # Subgraph filter
-st.subheader("🔍 Explore Subgraph by Selecting a Drug or Disease")
+st.subheader("Explore Subgraph by Selecting a Drug or Disease")
 all_entities = sorted(set(df['Drug'].unique()).union(df['Disease'].unique()))
 selected_entity = st.selectbox("Select a Drug or Disease:", all_entities)
 
@@ -53,34 +53,10 @@ nx.draw_networkx_edge_labels(H, pos1, edge_labels=nx.get_edge_attributes(H, 'rel
 plt.axis('off')
 st.pyplot(fig1)
 
-# Natural explanation
-st.subheader("🗣️ Simple Explanation of a Path")
-explained = False
-for node in H.nodes:
-    if node != selected_entity and nx.has_path(H, selected_entity, node):
-        path = nx.shortest_path(H, selected_entity, node)
-        if len(path) == 3:
-            st.markdown(f"**Explanation**: `{path[0]}` is connected to `{path[2]}` through `{path[1]}`.")
-            explained = True
-            break
-if not explained:
-    st.info("No 2-step paths found to explain from the selected entity.")
 
-# Mini quiz
-st.subheader("🧠 Quick Knowledge Graph Quiz")
-quiz_row = random.choice(df.to_dict(orient='records'))
-options = list(df[df["Disease"] == quiz_row["Disease"]]["Drug"].unique())
-random.shuffle(options)
-user_answer = st.radio(f"Which of the following drugs treats **{quiz_row['Disease']}**?", options)
-
-if st.button("Check Answer"):
-    if user_answer == quiz_row["Drug"]:
-        st.success("✅ Correct!")
-    else:
-        st.error(f"❌ Incorrect. The correct answer is **{quiz_row['Drug']}**.")
 
 # Show full graph (optional)
-if st.checkbox("🌐 Show Full Knowledge Graph"):
+if st.checkbox("Show Full Knowledge Graph"):
     st.subheader("Full Knowledge Graph (All 100 entries)")
     fig2, ax2 = plt.subplots(figsize=(14, 10))
     pos2 = nx.spring_layout(G, seed=42)
@@ -90,4 +66,4 @@ if st.checkbox("🌐 Show Full Knowledge Graph"):
     plt.axis('off')
     st.pyplot(fig2)
 
-st.success("✅ Try filtering by different nodes or taking the quiz again to reinforce your understanding of knowledge graphs.")
+
