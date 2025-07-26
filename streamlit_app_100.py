@@ -57,7 +57,7 @@ st.pyplot(fig1)
 
 # Show full graph (optional)
 if st.checkbox("Show Full Knowledge Graph"):
-    st.subheader("Full Knowledge Graph (All 100 entries)")
+    st.subheader("Full Knowledge Graph")
     fig2, ax2 = plt.subplots(figsize=(14, 10))
     pos2 = nx.spring_layout(G, seed=42)
     node_colors2 = ['lightblue' if G.nodes[n]['type'] == 'Drug' else 'lightgreen' if G.nodes[n]['type'] == 'Disease' else 'salmon' for n in G.nodes]
